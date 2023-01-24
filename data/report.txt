@@ -1,0 +1,79 @@
+# Raport:  2022-08-01 14:44:10.404326
+              precision    recall  f1-score   support
+
+           1       0.50      0.20      0.29        10
+           2       0.64      0.70      0.67        10
+           3       0.55      0.60      0.57        10
+           4       0.73      0.80      0.76        10
+           5       0.54      0.70      0.61        10
+           6       1.00      1.00      1.00        10
+           7       0.90      0.90      0.90        10
+
+    accuracy                           0.70        70
+   macro avg       0.69      0.70      0.68        70
+weighted avg       0.69      0.70      0.68        70
+
+Accuracy threshold:	0.895
+Balanced Accuracy:	0.7000000000000001
+Matthews Correlation Coefficient:	0.6537464287195639
+Confusion Matrix:
+         pred: 1  pred: 2  pred: 3  pred: 4  pred: 5  pred: 6  pred: 7
+true: 1        2        1        2        2        3        0        0
+true: 2        0        7        2        1        0        0        0
+true: 3        1        1        6        0        2        0        0
+true: 4        0        2        0        8        0        0        0
+true: 5        1        0        1        0        7        0        1
+true: 6        0        0        0        0        0       10        0
+true: 7        0        0        0        0        1        0        9
+# Raport:  2022-08-01 14:46:43.144062
+              precision    recall  f1-score   support
+
+           1       0.50      0.20      0.29        10
+           2       0.64      0.70      0.67        10
+           3       0.55      0.60      0.57        10
+           4       0.73      0.80      0.76        10
+           5       0.54      0.70      0.61        10
+           6       1.00      1.00      1.00        10
+           7       0.90      0.90      0.90        10
+
+    accuracy                           0.70        70
+   macro avg       0.69      0.70      0.68        70
+weighted avg       0.69      0.70      0.68        70
+
+Accuracy threshold:	0.895
+Balanced Accuracy:	0.7000000000000001
+Matthews Correlation Coefficient:	0.6537464287195639
+Confusion Matrix:
+         pred: 1  pred: 2  pred: 3  pred: 4  pred: 5  pred: 6  pred: 7
+true: 1        2        1        2        2        3        0        0
+true: 2        0        7        2        1        0        0        0
+true: 3        1        1        6        0        2        0        0
+true: 4        0        2        0        8        0        0        0
+true: 5        1        0        1        0        7        0        1
+true: 6        0        0        0        0        0       10        0
+true: 7        0        0        0        0        1        0        9
+# Raport:  2022-08-01 14:47:56.414253
+              precision    recall  f1-score   support
+
+           2       0.70      0.70      0.70        10
+           3       0.60      0.60      0.60        10
+           4       0.80      0.80      0.80        10
+           5       0.67      0.60      0.63        10
+           6       1.00      1.00      1.00        10
+           7       0.82      0.90      0.86        10
+
+    accuracy                           0.77        60
+   macro avg       0.76      0.77      0.76        60
+weighted avg       0.76      0.77      0.76        60
+
+Accuracy threshold:	0.91
+Balanced Accuracy:	0.7666666666666666
+Matthews Correlation Coefficient:	0.7202401200667056
+Confusion Matrix:
+         pred: 2  pred: 3  pred: 4  pred: 5  pred: 6  pred: 7
+true: 2        7        2        1        0        0        0
+true: 3        1        6        1        2        0        0
+true: 4        2        0        8        0        0        0
+true: 5        0        2        0        6        0        2
+true: 6        0        0        0        0       10        0
+true: 7        0        0        0        1        0        9
