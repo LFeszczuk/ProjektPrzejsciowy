@@ -1,15 +1,21 @@
 import pandas as pd
 import numpy as np
-import glob
 import os
 from pathlib import Path
 from som import SOM
-this_folder = (Path(__file__) / "..").resolve()
+from minisom import MiniSom
+from matplotlib import pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
+from lvq import lvq_comp
+
+this_folder = (Path(__file__).parent / "..").resolve()
 
 def input_signal_draw(data):
     print(data)
 
-def data_extract():
+def data_extract(gamma,IP_v,IPS_v,e):
     path_list = {
         "path_2": Path(f"{this_folder}\\data\\2"),
         "path_3": Path(f"{this_folder}\\data\\3"),
@@ -19,7 +25,7 @@ def data_extract():
         "path_7": Path(f"{this_folder}\\data\\7"),
     }
     li = []
-    for key in path_list:
+    for idx,key in enumerate(path_list):
         if not (os.path.exists(path_list[key])):
             print(["Could not find ", path_list[key]])
         file_list = [
@@ -33,31 +39,26 @@ def data_extract():
             df=df.drop([1, 3,5,7,9,11,13,14], axis=1)  
             df=df.replace(',', '.',regex=True)
             df = df.astype(float)
+            f_df=[]
             #get df as a list of series map it to fourier turn back to list
             df.columns=[i for i in range(8)]
             series_list = [df[col] for col in df]
-            f_df=map(feature_reduction,series_list)
-            f_df=list(f_df)
+            for series in series_list:
+                f_df.append(feature_reduction(series,gamma,IP_v,IPS_v,e))
+
             #flatten the list of lists
             f_df = [item for sublist in f_df for item in sublist]
+            f_df.append(idx)
             #make the dict and append it to temp_list with every file in folder where f_df is list of features
             li.append(f_df)
-        #dict with every folder and its list of files,df
-        # data_dict[path_list[key].name]=li
-
-        # frame = pd.concat(li, axis=0, ignore_index=True)
     df_processed=pd.DataFrame(li)
-
     return df_processed
 
-def feature_reduction(signal):
+def feature_reduction(signal,gamma,IP_v,IPS_v,e):
     G_prim=[]
     s=[]
     selected_f=[]
-    gamma=0.4
-    IP_v=4
-    IPS_v=0
-    e=20 #wanted number of features
+    #wanted number of features
 
     new_s=np.fft.rfft(signal)
 
@@ -86,16 +87,83 @@ def feature_reduction(signal):
             IPE_v=idx+IP_v
         s.append(sigma_sum(IPS_v, IPE_v, harmonic_average))
 
+    s=[i.real for i in s]
+
     #linear selection
     for k in range(0,e):
         selected_f.append(s[int(k*(len(s)-1)/(e-1))])
 
     return selected_f
 
+def classify(som, data,X_train,y_train):
+    """Classifies each sample in data in one of the classes definited
+    using the method labels_map.
+    Returns a list of the same length of data where the i-th element
+    is the class assigned to data[i].
+    """
+    winmap = som.labels_map(X_train, y_train)
+    default_class = np.sum(list(winmap.values())).most_common()[0][0]
+    result = []
+    for d in data:
+        win_position = som.winner(d)
+        if win_position in winmap:
+            result.append(winmap[win_position].most_common()[0][0])
+        else:
+            result.append(default_class)
+    return result
+
+def som_clasificator(data,num_features):
+
+    Y_data = data.iloc[:, -1].values
+    X_data = data.iloc[:, :-1].values
+    X_data = np.apply_along_axis(lambda L: (L - np.min(L))/(np.max(L) - np.min(L)),1,X_data)
+
+    # labels=np.unique(Y_data)
+    X_train, X_test, y_train, y_test = train_test_split(X_data, Y_data, stratify=Y_data)
+
+    som = MiniSom(10, 10, num_features, sigma=2, learning_rate=0.5, 
+                  neighborhood_function='triangle', random_seed=10)
+    som.pca_weights_init(X_train)
+    som.train_random(X_train, 500, verbose=False)
+    class_report=classification_report(y_test, classify(som, X_test,X_train,y_train))
+    print(class_report)
+
+
+# def plot_scattermatrix(data, target):
+#     df = pd.DataFrame(data)
+#     df['target'] = target
+#     return sns.pairplot(df, hue='target', diag_kind='hist')
+
+# def lvq_classificator(data):
+#     X_data = data.iloc[:, :-1].values
+#     Y_data = data.iloc[:, -1].values
+#     x_real = X_data.real  
+#     x_im = X_data.imag
+#     X_data=x_real
+
+#     X_data = np.apply_along_axis(lambda L: (L - np.min(L))/(np.max(L) - np.min(L)),1,X_data)
+#     # labels=np.unique(Y_data)
+#     X_train, X_test, y_train, y_test = train_test_split(X_data, Y_data, stratify=Y_data)
+#     lvqnet = algorithms.LVQ3(n_inputs=64, n_classes=6)
+#     lvqnet.train(X_train, y_train, epochs=100)
+#     plot_scattermatrix(X_train, y_train)
+#     plot_scattermatrix(X_train=lvqnet.weight, y_train=lvqnet.subclass_to_class)
+#     plt.show()
+
 def main():
-    data=data_extract()
-    som_net=SOM(6, 6, 160, 0.5, 0.5, 100)
-    som_net.train(data)
-    
+    gamma=0.4
+    IP_v=4
+    IPS_v=0
+    e=8
+    data=data_extract(gamma,IP_v,IPS_v,e)
+    Y_data = data.iloc[:, -1].values
+    X_data = data.iloc[:, :-1].values
+    X_data = np.apply_along_axis(lambda L: (L - np.min(L))/(np.max(L) - np.min(L)),1,X_data)
+
+    lvq_comp(X_data,Y_data)
+    som_clasificator(data,e*8)
+    # lvq_classificator(data)
+
+
 if __name__=="__main__":
     main()

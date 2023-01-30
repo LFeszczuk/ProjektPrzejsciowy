@@ -86,3 +86,32 @@ class SOM(object):
         for i in range(x):
             for j in range(y):
                 yield np.array([i, j])
+    # def centroid_grid(self):
+    #     centroid_grid = [[] for i in range(self._x)]
+    #     self._weightages = list(self._sess.run(self._weights_list))
+    #     self._locations = list(self._sess.run(self._location_vects))
+    #     for i, loc in enumerate(self._locations):
+    #         centroid_grid[loc[0]].append(self._weightages[i])
+    #     self._centroid_grid = centroid_grid
+    def map_vects(self, input_vects):
+        """
+        Maps each input vector to the relevant neuron in the SOM
+        grid.
+        'input_vects' should be an iterable of 1-D NumPy arrays with
+        dimensionality as provided during initialization of this SOM.
+        Returns a list of 1-D NumPy arrays containing (row, column)
+        info for each input vector(in the same order), corresponding
+        to mapped neuron.
+        """
+ 
+        # if not self._trained:
+        #     raise ValueError("SOM not trained yet")
+ 
+        to_return = []
+        for vect in input_vects:
+            min_index = min([i for i in range(len(self._weights_list))],
+                            key=lambda x: np.linalg.norm(vect-
+                                                         self._weights_list[x]))
+            to_return.append(self._locations[min_index])
+ 
+        return to_return
