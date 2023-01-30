@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import glob
 import os
 from pathlib import Path
 from som import SOM
@@ -8,9 +7,9 @@ from minisom import MiniSom
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from sklearn import preprocessing
-# from mglearn import discrete_scatter
-from sklearn.decomposition import PCA
+
+from lvq import lvq_comp
+
 this_folder = (Path(__file__).parent / "..").resolve()
 
 def input_signal_draw(data):
@@ -113,7 +112,7 @@ def classify(som, data,X_train,y_train):
             result.append(default_class)
     return result
 
-def som_clasificator(data):
+def som_clasificator(data,num_features):
 
     Y_data = data.iloc[:, -1].values
     X_data = data.iloc[:, :-1].values
@@ -122,7 +121,7 @@ def som_clasificator(data):
     # labels=np.unique(Y_data)
     X_train, X_test, y_train, y_test = train_test_split(X_data, Y_data, stratify=Y_data)
 
-    som = MiniSom(10, 10, 64, sigma=2, learning_rate=0.5, 
+    som = MiniSom(10, 10, num_features, sigma=2, learning_rate=0.5, 
                   neighborhood_function='triangle', random_seed=10)
     som.pca_weights_init(X_train)
     som.train_random(X_train, 500, verbose=False)
@@ -151,13 +150,17 @@ def som_clasificator(data):
 #     plot_scattermatrix(X_train=lvqnet.weight, y_train=lvqnet.subclass_to_class)
 #     plt.show()
 def main():
-    # gamma=0.4
-    # IP_v=4
-    # IPS_v=0
-    # e=8
-    data=data_extract(0.4,4,0,8)
+    gamma=0.4
+    IP_v=4
+    IPS_v=0
+    e=8
+    data=data_extract(gamma,IP_v,IPS_v,e)
+    Y_data = data.iloc[:, -1].values
+    X_data = data.iloc[:, :-1].values
+    X_data = np.apply_along_axis(lambda L: (L - np.min(L))/(np.max(L) - np.min(L)),1,X_data)
 
-    som_clasificator(data)
+    lvq_comp(X_data,Y_data)
+    som_clasificator(data,e*8)
     # lvq_classificator(data)
 
 
