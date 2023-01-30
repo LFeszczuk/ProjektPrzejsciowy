@@ -4,19 +4,19 @@ import glob
 import os
 from pathlib import Path
 from som import SOM
-this_folder = (Path(__file__).parent / "..").resolve()
+this_folder = (Path(__file__) / "..").resolve()
 
 def input_signal_draw(data):
     print(data)
 
 def data_extract():
     path_list = {
-        "path_2": Path(f"{this_folder}\\Sterowanie_protezy\\data\\2"),
-        "path_3": Path(f"{this_folder}\\Sterowanie_protezy\\data\\3"),
-        "path_4": Path(f"{this_folder}\\Sterowanie_protezy\\data\\4"),
-        "path_5": Path(f"{this_folder}\\Sterowanie_protezy\\data\\5"),
-        "path_6": Path(f"{this_folder}\\Sterowanie_protezy\\data\\6"),
-        "path_7": Path(f"{this_folder}\\Sterowanie_protezy\\data\\7"),
+        "path_2": Path(f"{this_folder}\\data\\2"),
+        "path_3": Path(f"{this_folder}\\data\\3"),
+        "path_4": Path(f"{this_folder}\\data\\4"),
+        "path_5": Path(f"{this_folder}\\data\\5"),
+        "path_6": Path(f"{this_folder}\\data\\6"),
+        "path_7": Path(f"{this_folder}\\data\\7"),
     }
     li = []
     for key in path_list:
