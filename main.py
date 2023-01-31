@@ -17,12 +17,12 @@ def input_signal_draw(data):
 
 def data_extract(gamma,IP_v,IPS_v,e):
     path_list = {
-        "path_2": Path(f"{this_folder}\\Sterowanie_protezy\\data\\2"),
-        "path_3": Path(f"{this_folder}\\Sterowanie_protezy\\data\\3"),
-        "path_4": Path(f"{this_folder}\\Sterowanie_protezy\\data\\4"),
-        "path_5": Path(f"{this_folder}\\Sterowanie_protezy\\data\\5"),
-        "path_6": Path(f"{this_folder}\\Sterowanie_protezy\\data\\6"),
-        "path_7": Path(f"{this_folder}\\Sterowanie_protezy\\data\\7"),
+        "path_2": Path(f"{this_folder}\\data\\2"),
+        "path_3": Path(f"{this_folder}\\data\\3"),
+        "path_4": Path(f"{this_folder}\\data\\4"),
+        "path_5": Path(f"{this_folder}\\data\\5"),
+        "path_6": Path(f"{this_folder}\\data\\6"),
+        "path_7": Path(f"{this_folder}\\data\\7"),
     }
     li = []
     for idx,key in enumerate(path_list):
@@ -149,6 +149,7 @@ def som_clasificator(data,num_features):
 #     plot_scattermatrix(X_train, y_train)
 #     plot_scattermatrix(X_train=lvqnet.weight, y_train=lvqnet.subclass_to_class)
 #     plt.show()
+
 def main():
     gamma=0.4
     IP_v=4
